@@ -1,10 +1,11 @@
-import { isValidPassword } from "../utils/bcrypt.js";
-import UserDao from "../dao/user.dao.js";
-import CartDao from "../dao/cart.dao.js";
+import { isValidPassword } from "../utils/bcrypt";
+import UserDao from "../dao/user.dao";
+import CartDao from "../dao/cart.dao";
 
 export default  class UserService {
     constructor() {
         this.userDao = new UserDao();
+        this.cartDao = new CartDao();
     }
 
     getUsers = async() => {
@@ -12,7 +13,7 @@ export default  class UserService {
             const users = await this.userDao.getUsers();
             return users;
         } catch (error) {
-            throw new Error( "Error al obtener los usuarios: " + error.message );
+            throw new Error({ message: "Error al obtener los usuarios en el service", error: error.message });
         }
     };
 
@@ -22,7 +23,7 @@ export default  class UserService {
             const user = await this.userDao.findUserByEmail( email );
             user && "El usuario ya existe..";
 
-            const newCart = await CartDao.createCart({});
+            const newCart = await this.cartDao.createCart({});
             const updatedData = {
                 ...userData,
                 cart: newCart._id,
