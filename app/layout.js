@@ -8,7 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body>
+      <body className="min-h-screen grid grid-rows-[auto_1fr_auto]">
         {children}
       </body>
     </html>

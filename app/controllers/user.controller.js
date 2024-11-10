@@ -22,24 +22,10 @@ export default class UserController {
     registerUser = async(userData) => {
         try {
             const { first_name, last_name, email, password } = userData;
-
-            if (!first_name || !last_name || !email || !password) {
-                return { status: 400, message: "Todos los campos son requeridos" };
-            }
-
-            // Usamos await en createHash para asegurar que tenemos una cadena encriptada.
+            if (!first_name || !last_name || !email || !password) return { status: 400, message: "Todos los campos son requeridos" };
             const hashedPassword = await createHash(password);
-
             const newCart = await cartDao.createCart({ products: [] });
-            
-            const newUserData = {
-                first_name,
-                last_name,
-                email,
-                password: hashedPassword,  // Aseguramos que password sea una cadena encriptada
-                cart: newCart._id,
-            };
-
+            const newUserData = { first_name, last_name, email, password: hashedPassword, cart: newCart._id };
             const user = await userDao.createUser(newUserData);
             return { status: 201, user };
         } catch (error) {
@@ -51,27 +37,11 @@ export default class UserController {
     loginUser = async(userData) => {
         try {
             const { email, password } = userData;
-
             const user = await userDao.findUserByEmail(email);
-            console.log(user);
-
-            if (!user) {
-                return { status: 404, message: "El usuario no está registrado" };
-            }
-
-            // Espera la verificación de la contraseña con await
+            if (!user) return { status: 404, message: "El usuario no está registrado" };
             const passwordMatch = await isValidPassword(user, password);
-
-            if (!passwordMatch) {
-                return { status: 401, message: "La contraseña es incorrecta" };
-            }
-
-            const token = jwt.sign(
-                { email: user.email, first_name: user.first_name, last_name: user.last_name, role: user.role, cart: user.cart, id: user._id.toString() },
-                "coderhouse",
-                { expiresIn: "1h" },
-            );
-
+            if (!passwordMatch) return { status: 401, message: "La contraseña es incorrecta" };
+            const token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name, role: user.role, cart: user.cart, id: user._id.toString() }, "coderhouse", { expiresIn: "1h" });
             await sessionDao.createSession(user._id, token);
             return { status: 200, token }
         } catch (error) {
@@ -101,4 +71,31 @@ export default class UserController {
             return { status: 500, message: "Error al obtener los usuarios registrados", error: error.message };
         }
     };
+
+    deleteUserById = async(id) => {
+        try {
+            await userDao.deleteUserById(id)
+        } catch (error) {
+            console.log(error.message);
+            return { status: 500, message: "Error al eliminar un usuario", error: error.message };
+        }
+    };
+
+    updateUser = async (id, data) => {
+        try {
+            const { first_name, last_name, address, images, password } = data;
+            const updateData = {};
+            if (first_name) updateData.first_name = first_name;
+            if (last_name) updateData.last_name = last_name;
+            if (address) updateData.address = address;
+            if (images) updateData.images = images;
+            if (password) updateData.password = password;
+            const updatedUser = await userDao.updateUserById(id, updateData);
+            if (!updatedUser) return { status: 404, message: "Usuario no encontrado" };
+            return { status: 200, message: "Usuario modificado exitosamente", updatedUser };
+        } catch (error) {
+            console.log(error.message);
+            return { status: 500, message: "Error al actualizar el usuario", error: error.message };
+        }
+    };    
 }

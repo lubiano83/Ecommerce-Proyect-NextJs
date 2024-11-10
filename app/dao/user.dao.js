@@ -1,5 +1,8 @@
 import UserModel from "../models/user.model.js";
+import CartDao from "./cart.dao.js";
 import { isValidId, connectDB } from "../config/mongoose.config.js";
+
+const cartDao = new CartDao();
 
 export default class UserDao {
 
@@ -52,22 +55,26 @@ export default class UserDao {
             return "ID no válido";
         }
         try {
-            return await UserModel.findByIdAndUpdate( id, { $set: doc } );
+            return await UserModel.findByIdAndUpdate( id, { $set: doc }, { new: true } );
         } catch (error) {
             console.log(error.message);
             throw new Error( "Error al actualizar un usuario por el id: " + error.message );
         }
     }
 
-    deleteUserById = async( id ) => {
+    deleteUserById = async(id) => {
         if (!isValidId(id)) {
             return "ID no válido";
         }
         try {
-            return await UserModel.findByIdAndDelete( id );
+            const user = await UserModel.findById(id);
+            if (!user) return { status: 404, message: "Usuario no encontrado" };
+            await cartDao.deleteCartById(user.cart);
+            await UserModel.findByIdAndDelete(id);
+            return { status: 200, message: "Usuario y carrito eliminados exitosamente" };
         } catch (error) {
             console.log(error.message);
-            throw new Error( "Error al eliminar un usuario por el id: " + error.message );
+            throw new Error("Error al eliminar un usuario y su carrito: " + error.message);
         }
-    }
+    };
 }
