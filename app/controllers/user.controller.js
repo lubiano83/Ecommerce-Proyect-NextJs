@@ -9,7 +9,7 @@ const cartDao = new CartDao();
 const sessionDao = new SessionDao();
 
 export default class UserController {
-    getUsers = async () => {
+    getUsers = async() => {
         try {
             const users = await userDao.getUsers();
             return { status: 200, users };
@@ -29,10 +29,9 @@ export default class UserController {
 
             // Usamos await en createHash para asegurar que tenemos una cadena encriptada.
             const hashedPassword = await createHash(password);
-            const newCart = await cartDao.createCart({ products: [] });
-            console.log(newCart);
-            
 
+            const newCart = await cartDao.createCart({ products: [] });
+            
             const newUserData = {
                 first_name,
                 last_name,
@@ -44,7 +43,6 @@ export default class UserController {
             const user = await userDao.createUser(newUserData);
             return { status: 201, user };
         } catch (error) {
-            console.log("Error al crear usuario:", error);
             console.log(error.message);
             return { status: 500, message: "Error al registrar un usuario", error: error.message };
         }
@@ -79,6 +77,28 @@ export default class UserController {
         } catch (error) {
             console.log(error.message);
             return { status: 500, message: "Error al logear un usuario", error: error.message };
+        }
+    };
+
+    usersLogged = async() => {
+        try {
+            const users = await sessionDao.getSessions();
+            const usersOnline = users.length;
+            return usersOnline;
+        } catch (error) {
+            console.log(error.message);
+            return { status: 500, message: "Error al obtener los usuarios online", error: error.message };
+        }
+    };
+
+    usersRegistered = async() => {
+        try {
+            const users = await userDao.getUsers();
+            const usersRegistered = users.length;
+            return usersRegistered;
+        } catch (error) {
+            console.log(error.message);
+            return { status: 500, message: "Error al obtener los usuarios registrados", error: error.message };
         }
     };
 }

@@ -4,7 +4,7 @@ import { connectDB, isValidId } from "../config/mongoose.config.js";
 export default class ProductDao {
 
     constructor() {
-        // Establecer la conexión al crear una instancia
+        // Intentamos conectar a la base de datos
         connectDB();
     }
     

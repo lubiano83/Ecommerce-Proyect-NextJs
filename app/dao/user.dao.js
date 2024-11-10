@@ -1,7 +1,12 @@
 import UserModel from "../models/user.model.js";
-import { isValidId } from "../config/mongoose.config.js";
+import { isValidId, connectDB } from "../config/mongoose.config.js";
 
 export default class UserDao {
+
+    constructor() {
+        // Intentamos conectar a la base de datos
+        connectDB();
+    }
     
     getUsers = async() => {
         try {
