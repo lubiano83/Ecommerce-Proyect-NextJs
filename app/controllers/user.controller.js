@@ -97,5 +97,5 @@ export default class UserController {
             console.log(error.message);
             return { status: 500, message: "Error al actualizar el usuario", error: error.message };
         }
-    };    
+    };
 }

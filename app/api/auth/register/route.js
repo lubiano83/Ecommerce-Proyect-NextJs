@@ -12,3 +12,12 @@ export async function POST(request) {
         return NextResponse.json({ message: "Error al registrar un usuario", error: error.message }, { status: 500 });
     }
 }
+
+export async function GET() {
+    try {
+        const users = await userController.usersRegistered();
+        return NextResponse.json({ users }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Error al obtener los usuarios", error: error.message }, { status: 500 });
+    }
+}
