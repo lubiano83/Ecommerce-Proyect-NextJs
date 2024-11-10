@@ -7,6 +7,7 @@ export default class UserDao {
         try {
             return await UserModel.find();
         } catch (error) {
+            console.log(error.message);
             throw new Error({ message: "Error al obtener los usuarios en el dao", error: error.message });
         }
     };
@@ -18,14 +19,16 @@ export default class UserDao {
         try {
             return await UserModel.findOne( id );
         } catch (error) {
+            console.log(error.message);
             throw new Error( "Error al obtener el usuario por el id: " + error.message );
         }
     }
 
-    findUserByEmail = async( query ) => {
+    findUserByEmail = async( email ) => {
         try {
-            return await UserModel.findOne( query );
+            return await UserModel.findOne({ email: email });
         } catch (error) {
+            console.log(error.message);
             throw new Error( "Error al obtener el usuario por el email: " + error.message );
         }
     };
@@ -34,6 +37,7 @@ export default class UserDao {
         try {
             return await UserModel.create( doc );
         } catch (error) {
+            console.log(error.message);
             throw new Error( "Error al crear un usuario: " + error.message );
         }
     }
@@ -45,6 +49,7 @@ export default class UserDao {
         try {
             return await UserModel.findByIdAndUpdate( id, { $set: doc } );
         } catch (error) {
+            console.log(error.message);
             throw new Error( "Error al actualizar un usuario por el id: " + error.message );
         }
     }
@@ -56,6 +61,7 @@ export default class UserDao {
         try {
             return await UserModel.findByIdAndDelete( id );
         } catch (error) {
+            console.log(error.message);
             throw new Error( "Error al eliminar un usuario por el id: " + error.message );
         }
     }

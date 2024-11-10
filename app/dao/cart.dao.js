@@ -1,12 +1,7 @@
 import CartModel from "../models/cart.model.js";
-import { connectDB, isValidId } from "../config/mongoose.config.js";
+import { isValidId } from "../config/mongoose.config.js";
 
 export default class CartDao {
-
-    constructor() {
-        // Establecer la conexión al crear una instancia
-        connectDB();
-    }
     
     getCarts = async( params ) => {
         return await CartModel.find( params );
@@ -19,8 +14,8 @@ export default class CartDao {
         return await CartModel.findOne( id );
     }
 
-    createCart = async( doc ) => {
-        return await CartModel.save( doc );
+    createCart = async(doc) => {
+        return await CartModel.create(doc);
     }
 
     updateCartById = async( id, doc ) => {

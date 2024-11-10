@@ -11,17 +11,17 @@ const usersSchema = new mongoose.Schema({
     first_name:{
         type: String,
         required:true,
-        lowercase: true,
+        trim: true,
     },
     last_name:{
         type:String,
         required:true,
-        lowercase: true,
+        trim: true,
     },
     email:{
         type:String,
         required:true,
-        lowercase: true,
+        trim: true,
         unique:true
     },
     password:{
