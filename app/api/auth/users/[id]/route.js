@@ -17,3 +17,13 @@ export async function PATCH(request, { params }) {
         return NextResponse.json({ message: "Error al actualizar el usuario", error: error.message }, { status: 500 });
     }
 }
+
+export async function GET(request, { params }) {
+    try {
+        const { id } = params;
+        const result = await userController.getUserById(id);
+        return NextResponse.json({ result }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Error al obtener los usuarios", error: error.message }, { status: 500 });
+    }
+}

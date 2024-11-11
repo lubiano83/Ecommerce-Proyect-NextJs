@@ -26,4 +26,17 @@ export default class UserDao {
             throw new Error( "Error al crear una session " + error.message );
         }
     };
+
+    deleteSession = async (token) => {
+        try {
+            const session = await SessionModel.findOneAndDelete({ token });
+            if (!session) {
+                return { status: 404, message: "Sesión no encontrada" };
+            }
+            return { status: 200, message: "Sesión eliminada de la base de datos" };
+        } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+            return { status: 500, message: "Error al eliminar la sesión", error: error.message };
+        }
+    };
 }

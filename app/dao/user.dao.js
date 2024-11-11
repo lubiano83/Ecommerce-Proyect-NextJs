@@ -20,12 +20,12 @@ export default class UserDao {
         }
     };
 
-    getUserById = async( id ) => {
+    getUserById = async(id) => {
         if (!isValidId(id)) {
             return "ID no válido";
         }
         try {
-            return await UserModel.findOne( id );
+            return await UserModel.findOne({ _id: id });
         } catch (error) {
             console.log(error.message);
             throw new Error( "Error al obtener el usuario por el id: " + error.message );

@@ -1,5 +1,7 @@
 import Footer from "./components/footer/Footer";
-import NavBar from "./components/navbar/NavBar";
+import Navbar from "./components/navbar/Navbar";
+import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 import "./globals.css";
 
 export const metadata = {
@@ -10,10 +12,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif">
-        <NavBar />
-        {children}
-        <Footer />
+      <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-gradient-to-b">
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

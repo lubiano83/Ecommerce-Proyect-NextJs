@@ -19,6 +19,16 @@ export default class UserController {
         }
     }
 
+    getUserById = async (id) => {
+        try {
+            const user = await userDao.getUserById(id);
+            if (!user) return { status: 404, message: "Usuario no encontrado" };
+            return { status: 200, user };
+        } catch (error) {
+            return { status: 500, message: "Error al obtener el usuario", error: error.message };
+        }
+    };
+
     registerUser = async(userData) => {
         try {
             const { first_name, last_name, email, password } = userData;
@@ -96,6 +106,16 @@ export default class UserController {
         } catch (error) {
             console.log(error.message);
             return { status: 500, message: "Error al actualizar el usuario", error: error.message };
+        }
+    };
+
+    logoutUser = async (token) => {
+        try {
+            const result = await sessionDao.deleteSession(token);
+            return result;
+        } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+            return { status: 500, message: "Error al cerrar sesión", error: error.message };
         }
     };
 }

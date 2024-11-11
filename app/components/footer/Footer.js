@@ -1,11 +1,14 @@
 import React from 'react';
 import Logo from '../Logo';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <div className='bg-green-700 flex justify-between items-center px-8 py-4'>
+    <div className='flex justify-evenly items-center px-8 py-4 bg-green-700'>
         <h3 className='text-white'>#Todos los Derechos Reservados</h3>
-        <Logo />
+        <Link href={"/"}>
+          <Logo />
+        </Link>
     </div>
   )
 }
