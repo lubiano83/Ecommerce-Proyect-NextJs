@@ -39,4 +39,15 @@ export default class UserDao {
             return { status: 500, message: "Error al eliminar la sesión", error: error.message };
         }
     };
+
+    getUserToken = async(token) => {
+        try {
+            const user = await SessionModel.findOne( token );
+            const userToken = user.token
+            return userToken;
+        } catch (error) {
+            console.error("Error al obtener el token ", error);
+            return { status: 500, message: "Error al obtener el token", error: error.message };
+        }
+    };
 }

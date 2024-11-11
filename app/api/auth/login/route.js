@@ -43,23 +43,3 @@ export async function POST(request) {
         );
     }
 }
-
-export async function GET() {
-    const response = NextResponse.json(
-        { message: "Logout exitoso" },
-        { status: 200 }
-    );
-
-    // Elimina la cookie estableciendo `Max-Age=0`
-    response.headers.set(
-        'Set-Cookie',
-        serialize('coderCookieToken', '', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 0,
-            path: '/',
-        })
-    );
-
-    return response;
-}

@@ -1,42 +1,11 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '../../Button';
+import { useAuth } from '@/app/hooks/useAuth';
 
 const LoginForm = () => {
-    const [formValues, setFormValues] = useState({
-        email: "",
-        password: ""
-    });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value });
-    };
-
-    const loginUser = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formValues)
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert("Inicio de sesión exitoso");
-                setFormValues({ email: "", password: "" });
-            } else {
-                alert(data.message || "Error al iniciar sesión");
-            }
-        } catch (error) {
-            console.error("Error en el inicio de sesión:", error);
-            alert("Error en el inicio de sesión");
-        }
-    };
+    const { loginUser, handleChange, formValues } = useAuth();
 
     return (
         <div className="w-1/2 min-w-72 p-8 gap-4 rounded-3xl flex flex-col justify-center items-center bg-green-700 bg-opacity-25">

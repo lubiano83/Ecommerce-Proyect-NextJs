@@ -9,6 +9,7 @@ const cartDao = new CartDao();
 const sessionDao = new SessionDao();
 
 export default class UserController {
+
     getUsers = async() => {
         try {
             const users = await userDao.getUsers();
@@ -111,7 +112,8 @@ export default class UserController {
 
     logoutUser = async (token) => {
         try {
-            const result = await sessionDao.deleteSession(token);
+            const userToken = await sessionDao.getUserToken(token);
+            const result = await sessionDao.deleteSession(userToken)
             return result;
         } catch (error) {
             console.error("Error al cerrar sesión:", error);

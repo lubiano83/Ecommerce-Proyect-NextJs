@@ -12,15 +12,10 @@ export async function GET() {
     }
 }
 
-export async function DELETE(request) {
+export async function DELETE() {
     try {
-        const { token } = await request.json();
-        if (!token) return NextResponse.json({ message: "Token no proporcionado" }, { status: 400 });
-        const result = await userController.logoutUser(token);
-        if (result.status !== 200) return NextResponse.json(result, { status: result.status });
-        const response = NextResponse.json({ message: "Sesión cerrada exitosamente" });
-        response.cookies.set("token", "", { maxAge: 0, path: "/" });
-        return response;
+        const result = await userController.logoutUser();
+        return NextResponse.json({ result }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Error al eliminar la sesión", error: error.message }, { status: 500 });
     }

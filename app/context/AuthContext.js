@@ -1,18 +1,11 @@
 "use client";
-import { createContext, useState, useEffect } from "react";
-import Swal from 'sweetalert2';
+import { createContext, useState } from "react";
 import { useRouter } from 'next/navigation';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const initialValues = {
-        logged: false,
-        email: null,
-        uid: null,
-    };
 
-    const [user, setUser] = useState(initialValues);
     const router = useRouter();
 
     const [formValues, setFormValues] = useState({
@@ -52,8 +45,54 @@ export const AuthProvider = ({children}) => {
         }
     };
 
+    const loginUser = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formValues)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Inicio de sesión exitoso");
+                setFormValues({ email: "", password: "" });
+                router.push("/");
+            } else {
+                alert(data.message || "Error al iniciar sesión");
+            }
+        } catch (error) {
+            console.error("Error en el inicio de sesión:", error);
+            alert("Error en el inicio de sesión");
+        }
+    };
+
+    const logout = async () => {
+        try {
+            const response = await fetch("/api/auth/sessions", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            if (response.ok) {
+                router.push("/");  // Redirige al usuario al inicio de sesión
+            } else {
+                const errorData = await response.json();
+                console.error(errorData.message || "Error al cerrar sesión");
+            }
+        } catch (error) {
+            console.error("Error en logout:", error);
+        }
+    };    
+
     return (
-        <AuthContext.Provider value={{ user, registerUser, formValues, handleChange }}>
+        <AuthContext.Provider value={{ registerUser, formValues, handleChange, loginUser, logout }}>
             {children}
         </AuthContext.Provider>
     );
