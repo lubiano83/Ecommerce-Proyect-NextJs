@@ -11,7 +11,7 @@ const NavBar = () => {
     const { isDarkMode, toggleDarkMode } = useDarkMode();
 
     return (
-        <div className='flex justify-evenly items-center px-8 py-3 gap-2 bg-green-700'>
+        <div className={`flex justify-evenly items-center px-8 py-3 gap-2 ${isDarkMode ? "bg-orange-700" : "bg-green-700"}`}>
             <div className='flex justify-center items-center gap-2'>
                 <Menu isDarkMode={isDarkMode}/>
                 <Link href={"/"}>

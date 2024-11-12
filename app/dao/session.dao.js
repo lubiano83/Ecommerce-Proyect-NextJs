@@ -4,7 +4,6 @@ import { isValidId, connectDB } from "../config/mongoose.config.js";
 export default class UserDao {
 
     constructor() {
-        // Intentamos conectar a la base de datos
         connectDB();
     }
 
@@ -43,6 +42,7 @@ export default class UserDao {
     getUserToken = async(token) => {
         try {
             const user = await SessionModel.findOne( token );
+            console.log(user);
             const userToken = user.token
             return userToken;
         } catch (error) {

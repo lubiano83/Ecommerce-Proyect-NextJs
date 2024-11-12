@@ -9,11 +9,9 @@ export async function POST(request) {
         const userData = await request.json();
         const result = await userController.loginUser(userData);
 
-        // Verifica si el login fue exitoso
         if (result.status === 200) {
             const token = result.token;
 
-            // Configura la cookie en la respuesta
             const response = NextResponse.json(
                 {
                     message: "Inicio de sesión exitoso",
